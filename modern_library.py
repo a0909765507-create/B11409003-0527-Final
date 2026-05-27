@@ -1,5 +1,11 @@
 import json
 import os
+from enum import Enum
+
+
+class BookStatus(Enum):
+    AVAILABLE = "available"
+    BORROWED = "borrowed"
 
 
 class Library:
@@ -29,6 +35,9 @@ class Library:
 
     def add_book(self, title, isbn, status):
         """新增一本書到圖書館"""
+        if status not in [s.value for s in BookStatus]:
+            print("無效的狀態值，請使用 'available' 或 'borrowed'")
+            return
         if self.is_isbn_exist(isbn):
             print("ISBN 已存在，無法新增。")
             return
@@ -51,8 +60,8 @@ class Library:
         """借閱圖書"""
         for book in self.books:
             if book["isbn"] == isbn:
-                if book["status"] == "available":
-                    book["status"] = "borrowed"
+                if book["status"] == BookStatus.AVAILABLE.value:
+                    book["status"] = BookStatus.BORROWED.value
                     print("成功借閱圖書。")
                 else:
                     print("該圖書已被借出。")
@@ -63,8 +72,8 @@ class Library:
         """歸還圖書"""
         for book in self.books:
             if book["isbn"] == isbn:
-                if book["status"] == "borrowed":
-                    book["status"] = "available"
+                if book["status"] == BookStatus.BORROWED.value:
+                    book["status"] = BookStatus.AVAILABLE.value
                     print("成功歸還圖書。")
                 else:
                     print("該圖書未被借出。")
@@ -85,7 +94,10 @@ def main():
         elif command.startswith("add "):
             try:
                 _, data = command.split(" ", 1)
-                title, isbn, status = data.split("/")
+                parts = data.split("/")
+                if len(parts) != 3:
+                    raise ValueError("輸入格式錯誤")
+                title, isbn, status = parts
                 library.add_book(title.strip(), isbn.strip(), status.strip())
             except ValueError:
                 print("格式錯誤！正確格式為：add 書名/ISBN/狀態")
@@ -93,10 +105,16 @@ def main():
             library.show_books()
         elif command.startswith("borrow "):
             isbn = command[7:].strip()
-            library.borrow_book(isbn)
+            if not isbn:
+                print("請輸入有效的 ISBN！")
+            else:
+                library.borrow_book(isbn)
         elif command.startswith("return "):
             isbn = command[7:].strip()
-            library.return_book(isbn)
+            if not isbn:
+                print("請輸入有效的 ISBN！")
+            else:
+                library.return_book(isbn)
         else:
             print("未知指令，請重新輸入。")
 
