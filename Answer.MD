@@ -83,6 +83,23 @@ Prompt C：
 請貼上執行程式並輸入 show 後，顯示資料清單。(請從呼叫執行程式到結束程式完整的把操作對話複製到下框)
 
 ```log
+=== 圖書管理系統 v1.0 ===
+> add 深入淺出Python/978001/available
+成功新增圖書。
+> add 資料結構理論/978002/available
+成功新增圖書。
+> add 演算法實作/978003/available
+成功新增圖書。
+> add 重複測試書/978001/available
+ISBN 已存在，無法新增。
+> borrow 978002
+成功借閱圖書。
+> show
+書名: 深入淺出Python, ISBN: 978001, 狀態: available
+書名: 資料結構理論, ISBN: 978002, 狀態: borrowed
+書名: 演算法實作, ISBN: 978003, 狀態: available
+> exit
+系統關閉，資料已儲存。
 
 ```
 
@@ -92,11 +109,21 @@ Prompt C：
 
 ```json
 [
-  {
-    "title": "XXX",
-    "isbn": "XXX",
-    "status": "XXX"
-  }
+    {
+        "title": "深入淺出Python",
+        "isbn": "978001",
+        "status": "available"
+    },
+    {
+        "title": "資料結構理論",
+        "isbn": "978002",
+        "status": "borrowed"
+    },
+    {
+        "title": "演算法實作",
+        "isbn": "978003",
+        "status": "available"
+    }
 ]
 ```
 
